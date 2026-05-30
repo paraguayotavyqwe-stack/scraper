@@ -52,7 +52,7 @@ export class BiggieScraper extends BaseScraper {
                     originalPrice: item.priceSaleOffer && item.priceSaleOffer < item.price ? item.priceSaleOffer : undefined,
                     isOnSale: !!(item.priceSaleOffer && item.priceSaleOffer < item.price),
                     url: `https://biggie.com.py/products/${categorySlug}/${item.code}`,
-                    imageUrl: item.images?.[0]?.src || undefined,
+                    imageUrl: item.images?.[0]?.src?.replace('300/', '') || undefined,
                     supermarket: 'Biggie',
                   });
                   categoryCount++;
