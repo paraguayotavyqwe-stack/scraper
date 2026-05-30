@@ -49,10 +49,10 @@ export class BiggieScraper extends BaseScraper {
                   products.push({
                     name: item.name,
                     price: item.price,
-                    originalPrice: item.promoPrice && item.promoPrice < item.price ? item.promoPrice : undefined,
-                    isOnSale: !!(item.promoPrice && item.promoPrice < item.price),
+                    originalPrice: item.priceSaleOffer && item.priceSaleOffer < item.price ? item.priceSaleOffer : undefined,
+                    isOnSale: !!(item.priceSaleOffer && item.priceSaleOffer < item.price),
                     url: `https://biggie.com.py/products/${categorySlug}/${item.code}`,
-                    imageUrl: item.photoUrl || undefined,
+                    imageUrl: item.images?.[0]?.src || undefined,
                     supermarket: 'Biggie',
                   });
                   categoryCount++;
