@@ -58,68 +58,11 @@ export abstract class BaseScraper {
     return context.newPage();
   }
 
-  /**
-   * Download an image and upload to Supabase Storage
-   */
-  protected async downloadImage(imageUrl: string, productId: string): Promise<string | null> {
-    try {
-      if (!imageUrl) return null;
-
-      // Generate filename
-      const ext = imageUrl.split('.').pop()?.split('?')[0] || 'jpg';
-      const filename = `${this.supermarketSlug}/${productId}.${ext}`;
-
-      // Check if already exists
-      const { data: existing } = await this.supabase.storage
-        .from('product-images')
-        .getPublicUrl(filename);
-
-      if (existing?.publicUrl) {
-        return existing.publicUrl;
-      }
-
-      // Download
-      const response = await fetch(imageUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        },
-        signal: AbortSignal.timeout(10000),
-      });
-
-      if (!response.ok) return null;
-
-      const buffer = await response.arrayBuffer();
-
-      // Upload to Supabase Storage
-      const { error } = await this.supabase.storage
-        .from('product-images')
-        .upload(filename, buffer, {
-          contentType: response.headers.get('content-type') || 'image/jpeg',
-          upsert: true,
-        });
-
-      if (error) {
-        console.error('Upload error:', error);
-        return null;
-      }
-
-      // Get public URL
-      const { data: urlData } = this.supabase.storage
-        .from('product-images')
-        .getPublicUrl(filename);
-
-      return urlData.publicUrl;
-
-    } catch (error) {
-      return null;
-    }
-  }
-
   abstract scrapeProducts(): Promise<ScrapedProduct[]>;
 
   async saveProducts(products: ScrapedProduct[]): Promise<void> {
-    let imageDownloaded = 0;
-    let imageFailed = 0;
+    let savedCount = 0;
+    let imageCount = 0;
 
     for (const product of products) {
       try {
@@ -144,45 +87,27 @@ export abstract class BaseScraper {
 
         if (!existingProduct) {
           const slug = this.slugify(product.name);
-          
-          // Download image first
-          let storedImageUrl = product.imageUrl;
-          if (product.imageUrl) {
-            const tempId = this.slugify(product.name);
-            const downloadedUrl = await this.downloadImage(product.imageUrl, tempId);
-            if (downloadedUrl) {
-              storedImageUrl = downloadedUrl;
-              imageDownloaded++;
-            } else {
-              imageFailed++;
-            }
-          }
-
           const { data: newProduct } = await this.supabase
             .from('products')
             .insert({
               name: product.name,
               slug,
               brand: product.brand,
-              image_url: storedImageUrl,
+              image_url: product.imageUrl || null,
               is_active: true,
             })
             .select('id, image_url')
             .single();
 
           existingProduct = newProduct;
+          if (product.imageUrl) imageCount++;
         } else if (!existingProduct.image_url && product.imageUrl) {
-          // Download image for existing product without one
-          const downloadedUrl = await this.downloadImage(product.imageUrl, existingProduct.id);
-          if (downloadedUrl) {
-            await this.supabase
-              .from('products')
-              .update({ image_url: downloadedUrl })
-              .eq('id', existingProduct.id);
-            imageDownloaded++;
-          } else {
-            imageFailed++;
-          }
+          // Update existing product with image if it doesn't have one
+          await this.supabase
+            .from('products')
+            .update({ image_url: product.imageUrl })
+            .eq('id', existingProduct.id);
+          imageCount++;
         }
 
         if (!existingProduct) continue;
@@ -214,14 +139,14 @@ export abstract class BaseScraper {
           price: product.price,
         });
 
+        savedCount++;
+
       } catch (error) {
         console.error(`Error processing product ${product.name}:`, error);
       }
     }
 
-    if (imageDownloaded > 0 || imageFailed > 0) {
-      console.log(`📸 Images: ${imageDownloaded} stored, ${imageFailed} failed`);
-    }
+    console.log(`📊 Saved ${savedCount} prices, ${imageCount} new images`);
   }
 
   private slugify(text: string): string {
