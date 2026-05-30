@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Environment files
+.env
+scraper/.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -24,3 +28,10 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Test files (keep structure, ignore generated)
+scraper/test-*.ts
+scraper/analyze-*.ts
+scraper/check-*.ts
+scraper/investigate-*.ts
+scraper/scraper/
