@@ -61,6 +61,15 @@ export class SuperseisScraper extends BaseScraper {
                 const originalPriceEl = card.querySelector('.price-normal');
                 const originalPrice = parseInt(originalPriceEl?.textContent?.replace(/[^0-9]/g, '') || '0', 10);
                 
+                // Get image URL - try multiple attributes
+                let imageUrl = imageEl?.getAttribute('src') || undefined;
+                if (!imageUrl || imageUrl === '' || imageUrl.includes('placeholder')) {
+                  imageUrl = imageEl?.getAttribute('data-src') || undefined;
+                }
+                if (!imageUrl || imageUrl === '' || imageUrl.includes('placeholder')) {
+                  imageUrl = imageEl?.getAttribute('data-lazy') || undefined;
+                }
+                
                 if (name && price > 0) {
                   items.push({
                     name: name.trim(),
@@ -68,7 +77,7 @@ export class SuperseisScraper extends BaseScraper {
                     originalPrice: originalPrice > price ? originalPrice : undefined,
                     isOnSale: originalPrice > price,
                     url,
-                    imageUrl: imageEl?.getAttribute('src') || undefined,
+                    imageUrl: imageUrl && !imageUrl.includes('placeholder') ? imageUrl : undefined,
                     supermarket: 'Superseis',
                   });
                 }
@@ -79,10 +88,11 @@ export class SuperseisScraper extends BaseScraper {
           });
 
           if (categoryProducts.length > 0) {
+            const withImages = categoryProducts.filter(p => p.imageUrl).length;
             products.push(...categoryProducts);
             count++;
             if (count % 20 === 0) {
-              console.log(`   Progress: ${count} categories, ${products.length} products`);
+              console.log(`   Progress: ${count} categories, ${products.length} products, ${withImages} with images`);
             }
           }
 

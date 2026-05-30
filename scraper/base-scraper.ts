@@ -87,13 +87,16 @@ export abstract class BaseScraper {
 
         if (!existingProduct) {
           const slug = this.slugify(product.name);
+          // Use product image or generate placeholder
+          const imageUrl = product.imageUrl || `https://placehold.co/400x400/1e1e2e/10b981?text=${encodeURIComponent(product.name.substring(0, 20))}`;
+          
           const { data: newProduct } = await this.supabase
             .from('products')
             .insert({
               name: product.name,
               slug,
               brand: product.brand,
-              image_url: product.imageUrl || null,
+              image_url: imageUrl,
               is_active: true,
             })
             .select('id, image_url')
