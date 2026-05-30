@@ -1,0 +1,24 @@
+{
+  "name": "ahorrapy-scraper",
+  "version": "1.0.0",
+  "description": "Automated web scraper for AhorraPY supermarket prices",
+  "main": "scheduler.ts",
+  "scripts": {
+    "scrape": "tsx run-all.ts",
+    "schedule": "tsx scheduler.ts",
+    "download-images": "tsx download-images.ts",
+    "scrape:superseis": "tsx -e \"import { SuperseisScraper } from './scrapers/superseis-scraper'; const s = new SuperseisScraper(); s.init().then(() => s.scrapeProducts()).then(p => { console.log(p.length + ' products'); s.close(); })\"",
+    "scrape:stock": "tsx -e \"import { StockScraper } from './scrapers/stock-scraper'; const s = new StockScraper(); s.init().then(() => s.scrapeProducts()).then(p => { console.log(p.length + ' products'); s.close(); })\"",
+    "scrape:casa-rica": "tsx -e \"import { CasaRicaScraper } from './scrapers/casa-rica-scraper'; const s = new CasaRicaScraper(); s.init().then(() => s.scrapeProducts()).then(p => { console.log(p.length + ' products'); s.close(); })\"",
+    "scrape:biggie": "tsx -e \"import { BiggieScraper } from './scrapers/biggie-scraper'; const s = new BiggieScraper(); s.init().then(() => s.scrapeProducts()).then(p => { console.log(p.length + ' products'); s.close(); })\""
+  },
+  "dependencies": {
+    "playwright": "^1.40.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

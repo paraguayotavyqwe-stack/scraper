@@ -1,0 +1,14 @@
+[Unit]
+Description=AhorraPY Price Scraper
+After=network.target
+
+[Service]
+Type=oneshot
+User=www-data
+WorkingDirectory=/opt/ahorrapy/scraper
+ExecStart=/usr/bin/npx tsx scheduler.ts
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,842 @@
+[
+  {
+    "name": "Margarina crema vegetal en pote Delicata 500 gramos",
+    "price": 13000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/292109-margarina-crema-vegetal-en-pote-delicata-500-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/8/84b/84b63/84b63485d6fd52902fd0dd06113d5067-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Crema de leche tetra pack de 2 unidades Nestlé 200 gramos",
+    "price": 14900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/258859-crema-de-leche-tetra-pack-de-2-unidades-nestle-200-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/d5e/d5e1a/d5e1ab2977a88722497fc6722e5b488f-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Cremoso Tradicional La Paulina por kilo",
+    "price": 68900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/289815-queso-cremoso-tradicional-horma-la-paulina-xkg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/4/4c7/4c7c2/4c7c23dba0603b80ffb2840a1d64266e-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Muzarella Trébol por kilo",
+    "price": 69500,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/2112-queso-muzarella-trebol-1-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/0/09f/09f3c/09f3cae93a1904bc99c11c06d0a01aec-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Sándwich Jersey por kilo",
+    "price": 60550,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/14380-queso-sandwich-jersey-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/e/e49/e4979/e4979eba694d896736d7d313a6ee1342-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Muzarella Lactolanda por kilo",
+    "price": 57500,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/273617-queso-muzarella-lactolanda-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c2e/c2ebf/c2ebf9dc5e59e59e572a214a25b3f79a-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Cheddar en Fetas Polenghi por kilo",
+    "price": 89100,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/4574-queso-cheddar-en-fetas-polenghi-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/6/69e/69e61/69e616d103d77f434a5a0485a44bce1b-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Cheddar Shreiber por kilo",
+    "price": 88150,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/14347-queso-menu-cheddar-shreiber-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/7/76e/76e77/76e7709e3f4f6b38c215b8e3e24a41c3-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Paraguay Lactolanda por kilo",
+    "price": 46500,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/97584-queso-paraguay-lactolanda-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/1/190/190c7/190c7c8425e54586a7c73743e0475a7b-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Mozzarella La Paulina por kilo",
+    "price": 89400,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/28294-queso-mozzarella-la-paulina-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/8/848/84889/84889d7f2368a25337759ac2668199f5-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Manteca Sin Sal Lactolanda por kilo",
+    "price": 44000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/80512-manteca-sin-sal-lactolanda-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/52b/52bd6/52bd6f0d269831a7513bc45220ebf5b6-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Dambo Vital Light Lactolanda por kilo",
+    "price": 63000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/queso-dambo-vital-light-lactolanda-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/9/9c6/9c684/9c684956e6f205b55ac65ae93970de33-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Gouda La Paulina por kilo",
+    "price": 89400,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/39458-queso-gouda-la-paulina-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/524/524f8/524f8ab0e2796562128893a89aa7a86d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Edam La Paulina por kilo",
+    "price": 89400,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/39386-queso-edam-la-paulina-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/3b4/3b4f6/3b4f6a2d3e6b546c3301bd0556b81e19-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Goya La Paulina por kilo",
+    "price": 130100,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/39379-queso-goya-la-paulina-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/2/25f/25f71/25f71ddaa92548bd1a050fe5c47f46f2-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Muzarella Bianca por kilo",
+    "price": 48900,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/269478-queso-muzarella-bianca-xkg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/f/fc4/fc4b3/fc4b3498138597549c0a7ab26082236d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Edam Sándwich Bianca por kilo",
+    "price": 48900,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/queso-edam-sandwich-bianca-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/2/26e/26e2d/26e2df2fcee1bf0c64c2b2d2e45279d9-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Parmesano Conaprole por kilo",
+    "price": 68000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/275072-queso-parmesano-conaprole-1-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/e/e54/e54fc/e54fc10bc437a66ee0c4020e1494497e-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Provolone Parrillero Jersey por kilo",
+    "price": 117600,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/271782-queso-provolone-parrillero-jersey-xkg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/e/ec2/ec297/ec297f295611de7709db2b27843c6f38-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Roquefort Sancor por kilo",
+    "price": 251600,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/3465-queso-azul-tradicional-sancor-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/4/4e5/4e527/4e5277eb20dd777a703411ae0bf37e49-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Sardo Trébol por kilo",
+    "price": 99000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/3273-queso-sardo-trebol-1-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/6/6f0/6f0bf/6f0bf78a058fd1839cf55486b9fe8ce5-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Queso Tybo Ilolay por kilo",
+    "price": 98400,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/2455-queso-tybo-ilolay-1-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/6/680/68011/6801144ea086d6232021bc87c190ed16-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Leche en polvo light Ilolay 30 unidades",
+    "price": 34100,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/leche-en-polvo-light-ilolay-30-unidades",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/b/bdc/bdc99/bdc99c2b51b2319afb92dc86968671e1-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Carnaza negra por kilo",
+    "price": 63950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/812-carnaza-negra-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c78/c78b7/c78b72db0810fdca8b8157970289a20d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Matambre Enrollado Envasado al Vacío por kilo",
+    "price": 45950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/59957-matambre-enrrollado-bja-1-kg-e",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/1/141/1417f/1417f7aa44850bd642e4bac29c43ad71-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Chicharon Trenzado en Bandeja por kilo",
+    "price": 37450,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/55738-chicharon-trenzado-bandeja-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/a/a74/a74c5/a74c5bcd9159535934570c4901dd02df-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Librillo por kilo",
+    "price": 15950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/librillo-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c59/c5978/c597817bbce40a14c22704c9570ee0d3-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Muslo especial de Pollo entero Pechugon por kilo",
+    "price": 25600,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/8205-muslo-de-pollo-entero-pechugon",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c5d/c5df1/c5df11db237ffee7f943ed939f630d3d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Corte para Guiso por kilo",
+    "price": 40950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/69090-corte-para-guiso-x-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/4/4c4/4c42a/4c42a38ebd269b09341a5b75c43c7b0e-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Lomo de Cerdo por kilo",
+    "price": 39750,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/8428-lomo-de-cerdo-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/6/638/63866/63866b90dd823523338e886f04687efc-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Costeleta de Cerdo en Bandeja por kilo",
+    "price": 25800,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/57366-costeleta-de-cerdo-en-bja-x-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/a/a72/a7201/a7201598c9e85c82915c4d31a7d383e2-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Costilla de cerdo especial en bandeja por kilo",
+    "price": 34900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/57302-costilla-de-cerdo-especial-en-bandeja-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/4/480/48076/480767ce69ed377bc1f53c376faa33cb-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Muslo de pollo parrillero fresco en bandeja por kilo",
+    "price": 29900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/11417-muslo-de-pollo-parrillero-fresco-en-bandeja-kzero-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/2/21c/21c3c/21c3c0b68b252695170eadb23e1c2d0f-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Muslo de Pollo parrillero fresco Kzero por kilo",
+    "price": 24950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/11416-muslo-de-pollo-parrillero-fresco-kzero-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/2/2c9/2c9aa/2c9aac7eef2c3cfe71d9e4a3665da463-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Bondiola de cerdo envasado al vacío por kilo",
+    "price": 38450,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/bondiola-de-cerdo-envasado-al-vacio-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/9/9e9/9e996/9e99697a094c072e14565d58e9c8c0c1-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Osobuco por kilo",
+    "price": 34450,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/26577-osobuco-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/b/b36/b3641/b364148299b716733fe4d1eab9a0f87d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Medallón de Lomito en Bandeja por kilo",
+    "price": 100950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/155724-medall%C3%B3n-de-lomito-en-bandeja-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/f/f55/f557c/f557cdacc28f53a80176ee42d497f8e7-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Costilla grill de cerdo por kilo",
+    "price": 26950,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/162038-costilla-grill-cerdo-x-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/ddf/ddf7b/ddf7b514e921a0b30fba6f7da8f05306-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Entraña gruesa por kilo",
+    "price": 39950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/entrana-gruesa-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/7/7f8/7f807/7f807166943074ccfd904cd0dd6d0dec-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Milanesa de Carne Fresca por kilo",
+    "price": 67950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/149385-milanesa-de-carne-vacuna-fresca-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/7/71b/71b3d/71b3d719b440c159e168d8ed772ce5e2-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Puchero Espinazo Vacuno por kilo",
+    "price": 21950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/156647-puchero-espinazo-vacuno-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/389/38966/38966c0d33890e8f497816add9fefc45-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Costilla Tira Ancha por kilo",
+    "price": 48950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/costilla-tira-ancha-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/3e3/3e351/3e351f97f3e1b93742cd5a6f3a37e342-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Costilla de Novillo de Segunda en Bandeja por kilo",
+    "price": 29950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/68705-costilla-de-segunda-novillo-bandeja-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c75/c75d7/c75d72494fd94c691a3c6b41a9bac887-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Lengua de cerdo por kilo",
+    "price": 22000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/321781-lengua-de-cerdo-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/0/0e9/0e935/0e9350a4e2f247cee1afed6be0d766b5-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Filet de Pechuga de pollo Fresca Kzero por kilo",
+    "price": 36750,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/filet-de-pechuga-de-pollo-fresca-kzero-por-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/9/9de/9de58/9de58a55d7429fb0b9439816cdc6dfd2-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Bife de Chorizo por kilo",
+    "price": 80250,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/144093-bife-dchorizo-retail-se",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/58e/58e1f/58e1f7b159a8ae3ea700a12c090b75ec-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Picaña al Ajo Retail por kilo",
+    "price": 87700,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/145998-pica%C3%B1a-al-ajo-retail-se-retail-x-1",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/7/702/7029e/7029e56996002578fe03918917eec788-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Chauchas congeladas Pinguin 500 gramos",
+    "price": 19150,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/319527-pinguin-chauchas-supercongeladas-500-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/b/baf/bafe7/bafe7ed99691b059e63650cc0918eab2-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Coliflor picado congelado Ardo 450 gramos",
+    "price": 19200,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/342874-coliflor-ardo-picado-congelado-450-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/55e/55eff/55eff62b2690cc5796ed3ca683e6021e-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Mix de berries congelados Frutos del Maipó 400 gramos",
+    "price": 39850,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/mix-de-berries-congelados-frutos-del-maipo-400-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/d34/d3470/d347094e5a55deeafed8105e87e3ccad-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Frutilla congelada Frutos del Maipó 450 gramos",
+    "price": 37950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/124515-frutillas-450gra-frutos-del-maipo-paq",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/8/83f/83fc3/83fc3437943e58e317d4438210f3ca01-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Arándanos Enteros Congelados Sabrosón 1 kilo",
+    "price": 70350,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/294539-ar%C3%A1ndanos-enteros-congelados-sabroson-1-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/326/3264d/3264db920da8cf2306abfc56df7e1afa-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Ensalada primavera congelada en paquere Sabrosón 1 kilo",
+    "price": 47800,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/324156-ensalda-paquete-sabroson-1-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/e/ee4/ee47c/ee47cc154965eeb2dd73c66365b15dff-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Arveja Congelada Sabrosón 500 gramos",
+    "price": 22200,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/333168-arveja-congelada-sabroson-500gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/4/4f1/4f134/4f1349d762e3e4a6fb5844b8e409d831-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Mandioca pelada y congelada Ocho Fuentes 1 kilo",
+    "price": 15450,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/306102-mandioca-pelada-y-congelada-ocho-fuentes-1kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/3fc/3fc5f/3fc5fa056078a6d861d9d3607a70fcff-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Mandioca Pelada Congelada Bianca 1 kilo",
+    "price": 10200,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/341426-mandioca-pelada-congelada-bianca1-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/9/923/923bf/923bf19f4d50df2e1cf68212cb12445a-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Espinaca Congelada JV 400 gramos",
+    "price": 17450,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/144190-espinaca",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/f/fbc/fbca3/fbca3722e7aa2c792764f45e01059035-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Coliflor IV 1 kilo",
+    "price": 41900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/144199-coliflor-iv",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/a/abf/abfd0/abfd08f51a3eca099a100ec781a8d90a-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Brócoli Congelado Bolsa IV 1 kilo",
+    "price": 42900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/146130-br%C3%B3coli-congelado-bolsa-iv-x-10-1kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/d35/d3548/d35484494d890f8eefd9f61c1e313187-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Aros de cebolla congeladas Bem brasil 400 gramos",
+    "price": 17200,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/342875-aros-de-cebolla-bem-brasil-cong-400-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c45/c453a/c453adb3fc728a04d1e9b632d7d9959a-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Choclos congelados dulces en paquete Jv 1 kilo",
+    "price": 46450,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/268771-maiz-dulce-choclo-jv-x-1kg-bsa",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/51a/51a6b/51a6b9677001ca13f4acdad307b3c7f6-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Coliflor Congelado Sabrosón 500 gramos",
+    "price": 29400,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/317744-coliflor-congelado-sabroson-500-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/9/9b1/9b1d4/9b1d4968a920cd7cf12d66e921f3cc54-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Champiñón Laminado en bolsa JV 1 kilo",
+    "price": 62950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/champinon-laminado-en-bolsa-jv-1-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/b/bec/becfc/becfc755433d52961c557dafa36ffd92-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Coles de Bruselas congelado JV 1 Kilo",
+    "price": 38950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/129568-col-de-bruselas-1kg-jv-pqte",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/de7/de76c/de76c1fac5b4efe73c65af8e4a40b4d4-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Arvejas congeladas paquete Sabrosón 1 kilo",
+    "price": 44300,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/324149-arvejas-congeladas-paquete-sabroson-1-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/e/ed1/ed1b6/ed1b639bb454a2a7e715bada76fe4204-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Frutilla Entera Congelada Sabrosón 1 kilo",
+    "price": 49300,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/294525-frutilla-entera-congelada-sabroson-1-kilo",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/a/a17/a1711/a1711b51977066baca26e0b4e2822441-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Coliflor Congelada Paquete Sabrosón 1 kilo",
+    "price": 54200,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/324155-coliflor-congelada-paquete-sabroson-1-kg",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/d21/d217b/d217bfab488000debac5555ae3f2cd8c-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Verduras mix congelado Pinguin 500 gramos",
+    "price": 24600,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/319524-pinguin-mistura-surtido-de-vegetales-supercongelados-500-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/1/1a1/1a1cf/1a1cf5eb319b7380c8e6e819a00fc3da-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Espinacas super congeladas Pinguin 500 Gr",
+    "price": 17950,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/319517-espinacas-supercongeladas-pinguin-500-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/5bf/5bfb8/5bfb8cc1b3103124e82cb10a6617075e-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Brócoli congelado Pinguin 500 gramos",
+    "price": 29650,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/319523-pinguin-brocoli-supercongelado-500-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/9/9e2/9e28e/9e28e6d7aa804ba42399dc3fc7c74aa5-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Papas prefritas para freidora de aire congeladas McCain 700 Gramos",
+    "price": 29500,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/papas-prefritas-para-freidora-de-aire-congeladas-mccain-700-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/58d/58db6/58db6ad9c7769b4f9f6d67f1b5449918-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Puré Papas Receta Completa Lista en sobre Knorr 125 gramos",
+    "price": 15000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/319743-pur%C3%A9-papas-receta-completa-lista-knorr-125-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c7c/c7cbd/c7cbd581b86faf34a58906380ff00481-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Cereal de trigo con leche infantil Nestúm 250g",
+    "price": 28100,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/cereal-de-trigo-con-leche-infantil-nestum-250g",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/6/65e/65eb3/65eb3639a459a225b1de23f8505f6ead-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Cereal sabor frutal trix marvel Nestlé 230 gramos",
+    "price": 19400,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/123635-cereal-sabor-frutal-trix-marvel-nestle-230-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/1/17a/17a23/17a2343adaf2913dbeb6286c581fa77c-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "WFER de chocolate con cobertura sabor a chocolate super 8 29 gramos",
+    "price": 3150,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/12053-wafer-de-chocolate-con-cobertura-super8-29gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/53b/53b12/53b12be14c8a85e7db3d428ce44fc7ea-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Cereales trix n°2 Nestlé 10X90 gramos",
+    "price": 7500,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/120947-cereales-trix-nro-2-nestl%C3%A9-10x90-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/2/230/2302f/2302f3642ab7d6eac287ea5ee7193bd0-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Galletita dulce surtida Terrabusi 300 gramos",
+    "price": 12800,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/332920-galletitas-dul-surt-terrabusi-var-300-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/b/be4/be485/be48551667c75f6130968b915e2da34c-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Galletita dulce surtida Terrabusi 590 gramos",
+    "price": 17600,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/333494-galletitas-dul-surtidas-terrabusi-590gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/d3f/d3fe7/d3fe71dda3a3b3c1f1cb281d17b5f56d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Galletitas variedad Terrabusi 310 gramos",
+    "price": 12800,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/335753-galletitas-surt-terrabusi-var-dor-310gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/6/6e7/6e796/6e7960e97f17195aec8e79bf6f2a1ae3-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Galletita cookies and cream Oreo 108 gramos",
+    "price": 6650,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/341529-galletita-cookies-and-cream-oreo-108-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/3ee/3ee3f/3ee3fb5c7f826a1abdc0ff5caf4e64fc-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Café torrado verona Starbucks 250 gramos",
+    "price": 79000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/346524-cafe-torrado-starbucks-verona-250-gr",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/540/540af/540afa4354b90b6a49354838ee504d6c-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Café torrado origen Colombia Starbucks 250 gramos",
+    "price": 79000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/346525-cafe-torrado-starbucks-orig-colombia-250",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/354/354b4/354b4e615ae894ad802cca4d23e42dde-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Alfajor triple mousse blanco Milka 55 gramos",
+    "price": 8700,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/182096-alfajor-triple-mousse-blanco-55-gr-milka-pla",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/e/e6b/e6b14/e6b14459c268c409b61725a9ed571841-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Limpiador desinfectante aroma lavanda doypack Lysoform 420 ml",
+    "price": 19500,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/288689-limpiador-desinfectante-con-aroma-lavanda-doypack-lysolform-420-ml",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/33c/33c55/33c55738288d290a74128f30d9e85b5e-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Quitamanchas para ropa en polvo doypack Vanish 450 gramos",
+    "price": 36000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/270188-quitamanchas-para-ropa-en-polvo-doypack-vanish-450-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/2/229/22932/229329260b339512550c73a45ca9a959-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón en polvo Multiacción Omo 200 gramos",
+    "price": 7400,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/jabon-en-polvo-multiaccion-omo-200-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/1/119/119e2/119e2aa5848fd40d5b5d5d7f88d1eafd-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Escobillón para interiores Puloil",
+    "price": 40700,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/12948-escobillon-para-interiores-puloil",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/3/3f6/3f6da/3f6da3c593ea44d70d01975151639fa6-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Escobillón doble doble barrido Puloil",
+    "price": 38500,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/10584-escobillon-doble-barrido-puloil",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/a/abd/abd27/abd27831ff78015dbf586568b339106e-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Escoba con mango mega plus Puloil",
+    "price": 35800,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/296824-escoba-con-mango-mega-plus-puloil",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/2/262/262f2/262f23e3a0b4bdc7e67fbd3f585c8b12-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Escoba con mango diana Puloil",
+    "price": 19850,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/289150-escoba-con-mango-diana-puloil",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c92/c92b0/c92b088bc822be61261522a8e52c7313-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Escurridor de piso Puloil 40 CM",
+    "price": 32550,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/12950-escurridor-de-piso-puloil-40-cm",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/b/b77/b7719/b77192fffd7ee9fbb57c329341826778-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Escurridor de piso Puloil 35 CM",
+    "price": 27000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/12710-escurridor-de-piso-puloil-35-cm",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/0/0e5/0e53b/0e53b7ec11ce29cf7043bde0e1ecca8d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Palita para basura click Puloil 1 unidad",
+    "price": 14000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/16044-pala-para-basura-clip-puloil",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/e/e05/e05d2/e05d2739cdd2cf6284222d85b411df68-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Mopa con palo repuesto Puloil",
+    "price": 40200,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/16465-mopa-con-palo-repuesto-puloil",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/0/05e/05e1f/05e1f3be643824d34e36e6865e74724d-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón en polvo ropa color Persil 900 gramos",
+    "price": 26000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/jabon-en-polvo-ropa-color-persil-900-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c28/c28be/c28bec1c68307972e5bbe68bb34a22a2-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón liquido alta higiene Persil 3 litros",
+    "price": 72000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/315388-jabon-liquido-alta-higiene-persil-3-litros",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/1/1b9/1b972/1b97286a62e00f0577a7ce517d9ec853-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Detergente líquido para ropa regular Persil 3 litros",
+    "price": 72000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/289304-jabon-liquido-para-ropas-blancas-persil-3lt",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/d/dd9/dd930/dd9302be82df44d14b717f1821f9e7e1-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón en polvo alta higiene Persil 900 gramos",
+    "price": 26000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/jabon-en-polvo-alta-higiene-persil-900-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/4/4b7/4b74a/4b74a43bb58ae18a78a97bce79f0206f-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón en polvo ropa blanca Persil 500 gramos",
+    "price": 16900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/jabon-en-polvo-ropa-blanca-persil-500-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/9/905/90576/90576a34d7156774c639dd19f572a0bd-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón en polvo ropa blanca Persil 900 gramos",
+    "price": 26000,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/146128-jabon-en-polvo-ropa-blanca-persil-900-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/6/6d6/6d6af/6d6af314a9c27c3e93e91857dc270823-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón liquido para ropa blanca Persil 830 ml",
+    "price": 23900,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/257943-jabon-liquido-para-ropa-regular-persil-830-ml",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/b/b99/b99b2/b99b2465aa74d44d4534eafd87335a6a-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Jabón liquido para ropa a color Persil 830 ml",
+    "price": 23900,
+    "isOnSale": true,
+    "url": "https://www.superseis.com.py/product/257939-jab%C3%B3n-liquido-para-ropa-color-persil-830-ml",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c22/c2282/c22827a6362f3bf2863b18e9017b98e7-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Quitamanchas para ropa en polvo doypack Vanish 120 gramos",
+    "price": 23000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/270190-quitamanchas-para-ropa-en-polvo-doypack-vanish-120-gramos",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/c/c51/c51d7/c51d7bb671368cf5f4e5a62f2cffe579-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Guante multiuso tamaño grande Scotch Brite",
+    "price": 19900,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/4166-guante-multiuso-tama%C3%B1o-grande-scotch-brite",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/f/f85/f85d0/f85d005b7e042b64372bb4d271b0c6a3-666x666.jpg",
+    "supermarket": "Superseis"
+  },
+  {
+    "name": "Guante Tareas Delicadas Tamaño Mediano Scotch Brite",
+    "price": 19000,
+    "isOnSale": false,
+    "url": "https://www.superseis.com.py/product/2087-guante-tareas-delicadas-tama%C3%B1o-mediano-scotch-brite",
+    "imageUrl": "https://cdn.sd.com.py/ocs6/catalog/Products/5/5f5/5f545/5f545e0d23a0310285ea4b9dd5551443-666x666.jpg",
+    "supermarket": "Superseis"
+  }
+]
