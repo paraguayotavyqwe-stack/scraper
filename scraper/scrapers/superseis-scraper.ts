@@ -39,6 +39,13 @@ export class SuperseisScraper extends BaseScraper {
         try {
           const fullUrl = url.startsWith('http') ? url : `https://www.superseis.com.py${url}`;
           
+          // Extract category name from URL path
+          const path = fullUrl.replace('https://www.superseis.com.py/catalog/', '');
+          const parts = path.split('/').filter(p => p);
+          const categoryName = parts[0]
+            ? parts[0].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+            : '';
+          
           await page.goto(fullUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
           await page.waitForTimeout(1500);
 
@@ -89,6 +96,9 @@ export class SuperseisScraper extends BaseScraper {
 
           if (categoryProducts.length > 0) {
             const withImages = categoryProducts.filter(p => p.imageUrl).length;
+            if (categoryName) {
+              for (const p of categoryProducts) p.category = categoryName;
+            }
             products.push(...categoryProducts);
             count++;
             if (count % 20 === 0) {

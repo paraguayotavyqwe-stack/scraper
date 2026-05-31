@@ -112,6 +112,7 @@ export class CasaRicaScraper extends BaseScraper {
           });
 
           console.log(`✅ Found ${categoryProducts.length} products in ${category.name}`);
+          for (const p of categoryProducts) p.category = category.name;
           products.push(...categoryProducts);
 
         } catch (error) {

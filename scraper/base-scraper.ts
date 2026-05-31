@@ -10,6 +10,7 @@ export interface ScrapedProduct {
   url: string;
   imageUrl?: string;
   supermarket: string;
+  category?: string;
 }
 
 export abstract class BaseScraper {
@@ -19,6 +20,7 @@ export abstract class BaseScraper {
   protected supermarketSlug: string;
   protected maxRetries = 3;
   protected retryDelay = 2000;
+  private categoryCache = new Map<string, string>();
 
   constructor(name: string, slug: string) {
     this.supermarketName = name;
@@ -78,6 +80,37 @@ export abstract class BaseScraper {
 
   abstract scrapeProducts(): Promise<ScrapedProduct[]>;
 
+  protected async getCategoryId(categoryName: string): Promise<string | null> {
+    if (this.categoryCache.has(categoryName)) {
+      return this.categoryCache.get(categoryName)!;
+    }
+
+    const slug = this.slugify(categoryName);
+    const { data } = await this.supabase
+      .from('categories')
+      .select('id')
+      .eq('slug', slug)
+      .single();
+
+    if (data) {
+      this.categoryCache.set(categoryName, data.id);
+      return data.id;
+    }
+
+    const { data: newCat } = await this.supabase
+      .from('categories')
+      .insert({ name: categoryName, slug })
+      .select('id')
+      .single();
+
+    if (newCat) {
+      this.categoryCache.set(categoryName, newCat.id);
+      return newCat.id;
+    }
+
+    return null;
+  }
+
   async saveProducts(products: ScrapedProduct[]): Promise<void> {
     let savedCount = 0;
     let imageCount = 0;
@@ -101,7 +134,7 @@ export abstract class BaseScraper {
     const productNames = products.map((p) => p.name);
     const { data: existingProducts } = await this.supabase
       .from('products')
-      .select('id, name, image_url')
+      .select('id, name, image_url, category_id')
       .in('name', productNames);
 
     const existingProductsMap = new Map(
@@ -127,6 +160,7 @@ export abstract class BaseScraper {
         slug: string;
         brand: string | null;
         image_url: string;
+        category_id: string | null;
         is_active: boolean;
       }> = [];
       const productImageUpdates: Array<{ id: string; imageUrl: string }> = [];
@@ -154,20 +188,26 @@ export abstract class BaseScraper {
 
         const existing = existingProductsMap.get(product.name);
 
+        const categoryId = product.category ? await this.getCategoryId(product.category) : null;
+
         if (!existing) {
-          // New product - will insert in batch
           const slug = this.slugify(product.name);
           productsToInsert.push({
             name: product.name,
             slug,
             brand: product.brand || null,
             image_url: product.imageUrl,
+            category_id: categoryId,
             is_active: true,
           });
         } else if (!existing.image_url && product.imageUrl) {
-          // Update existing product with image
           productImageUpdates.push({ id: existing.id, imageUrl: product.imageUrl });
           imageCount++;
+        } else if (categoryId && !existing.category_id) {
+          await this.supabase
+            .from('products')
+            .update({ category_id: categoryId })
+            .eq('id', existing.id);
         }
 
         // Get product ID (existing or for new ones, we'll need to insert first)

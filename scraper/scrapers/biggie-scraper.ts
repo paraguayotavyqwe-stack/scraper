@@ -14,19 +14,19 @@ export class BiggieScraper extends BaseScraper {
     try {
       // Known Biggie categories
       const categories = [
-        'lacteos',
-        'carniceria',
-        'bebidas-sin-alcohol',
-        'bebidas-con-alcohol',
-        'almacen',
-        'limpieza',
-        'cuidado-personal',
-        'panaderia',
-        'congelados',
-        'snacks',
+        { slug: 'lacteos', name: 'Lácteos' },
+        { slug: 'carniceria', name: 'Carnes' },
+        { slug: 'bebidas-sin-alcohol', name: 'Bebidas sin Alcohol' },
+        { slug: 'bebidas-con-alcohol', name: 'Bebidas con Alcohol' },
+        { slug: 'almacen', name: 'Almacén' },
+        { slug: 'limpieza', name: 'Limpieza' },
+        { slug: 'cuidado-personal', name: 'Cuidado Personal' },
+        { slug: 'panaderia', name: 'Panadería' },
+        { slug: 'congelados', name: 'Congelados' },
+        { slug: 'snacks', name: 'Snacks' },
       ];
 
-      for (const categorySlug of categories) {
+      for (const { slug: categorySlug, name: categoryName } of categories) {
         try {
           console.log(`\n📦 Fetching ${categorySlug}...`);
           
@@ -54,6 +54,7 @@ export class BiggieScraper extends BaseScraper {
                     url: `https://biggie.com.py/products/${categorySlug}/${item.code}`,
                     imageUrl: item.images?.[0]?.src?.replace('300/', '') || undefined,
                     supermarket: 'Biggie',
+                    category: categoryName,
                   });
                   categoryCount++;
                 }

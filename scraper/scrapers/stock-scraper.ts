@@ -11,22 +11,22 @@ export class StockScraper extends BaseScraper {
 
     try {
       const urls = [
-        'https://www.stock.com.py',
-        'https://www.stock.com.py/categoria-producto/lacteos/',
-        'https://www.stock.com.py/categoria-producto/carnes/',
-        'https://www.stock.com.py/categoria-producto/bebidas/',
-        'https://www.stock.com.py/categoria-producto/almacen/',
-        'https://www.stock.com.py/categoria-producto/limpieza/',
-        'https://www.stock.com.py/categoria-producto/frescos/',
-        'https://www.stock.com.py/categoria-producto/cuidado-personal/',
-        'https://www.stock.com.py/categoria-producto/higiene/',
-        'https://www.stock.com.py/categoria-producto/congelados/',
-        'https://www.stock.com.py/categoria-producto/panaderia/',
-        'https://www.stock.com.py/categoria-producto/snacks/',
-        'https://www.stock.com.py/categoria-producto/bebidas-con-alcohol/',
+        { url: 'https://www.stock.com.py', category: '' },
+        { url: 'https://www.stock.com.py/categoria-producto/lacteos/', category: 'Lácteos' },
+        { url: 'https://www.stock.com.py/categoria-producto/carnes/', category: 'Carnes' },
+        { url: 'https://www.stock.com.py/categoria-producto/bebidas/', category: 'Bebidas sin Alcohol' },
+        { url: 'https://www.stock.com.py/categoria-producto/almacen/', category: 'Almacén' },
+        { url: 'https://www.stock.com.py/categoria-producto/limpieza/', category: 'Limpieza' },
+        { url: 'https://www.stock.com.py/categoria-producto/frescos/', category: 'Frescos' },
+        { url: 'https://www.stock.com.py/categoria-producto/cuidado-personal/', category: 'Cuidado Personal' },
+        { url: 'https://www.stock.com.py/categoria-producto/higiene/', category: 'Higiene' },
+        { url: 'https://www.stock.com.py/categoria-producto/congelados/', category: 'Congelados' },
+        { url: 'https://www.stock.com.py/categoria-producto/panaderia/', category: 'Panadería' },
+        { url: 'https://www.stock.com.py/categoria-producto/snacks/', category: 'Snacks' },
+        { url: 'https://www.stock.com.py/categoria-producto/bebidas-con-alcohol/', category: 'Bebidas con Alcohol' },
       ];
 
-      for (const url of urls) {
+      for (const { url, category } of urls) {
         try {
           console.log(`\n📦 Scraping ${url.split('.py')[1] || 'homepage'}...`);
           await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
@@ -117,6 +117,9 @@ export class StockScraper extends BaseScraper {
             });
 
             if (pageProducts.length > 0) {
+              if (category) {
+                for (const p of pageProducts) p.category = category;
+              }
               products.push(...pageProducts);
               console.log(`   Page ${pageNum}: Found ${pageProducts.length} products`);
             }
