@@ -21,6 +21,12 @@ export class CasaRicaScraper extends BaseScraper {
         { url: 'https://www.casarica.com.py/catalogo/panaderia-c150', name: 'Panadería' },
         { url: 'https://www.casarica.com.py/catalogo/queseria-c80', name: 'Quesería' },
         { url: 'https://www.casarica.com.py/catalogo/fiambreria-c90', name: 'Fiambres' },
+        { url: 'https://www.casarica.com.py/catalogo/almacen-c10', name: 'Almacén' },
+        { url: 'https://www.casarica.com.py/catalogo/cuidado-personal-c160', name: 'Cuidado Personal' },
+        { url: 'https://www.casarica.com.py/catalogo/higiene-c170', name: 'Higiene' },
+        { url: 'https://www.casarica.com.py/catalogo/congelados-c180', name: 'Congelados' },
+        { url: 'https://www.casarica.com.py/catalogo/frutas-y-verduras-c190', name: 'Frutas y Verduras' },
+        { url: 'https://www.casarica.com.py/catalogo/bebidas-con-alcohol-c200', name: 'Bebidas Alcohólicas' },
       ];
 
       for (const category of categories) {

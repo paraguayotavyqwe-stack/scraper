@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { motion } from 'framer-motion';
 import { Navigation, Clock, Phone, ExternalLink, Search } from 'lucide-react';
 import { supabase } from '../integrations/supabase/client';
-import { cn } from '../lib/utils';
+import { cn, calculateDistance } from '../lib/utils';
 
 // Default center: Asunción, Paraguay
 const DEFAULT_CENTER: [number, number] = [-25.2637, -57.5759];
@@ -83,11 +83,46 @@ export function Map() {
     fetchSupermarkets();
   }, []);
 
-  const filteredSupermarkets = supermarkets.filter((s) => {
-    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.address?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
+  const isStoreOpen = (supermarket: Supermarket): boolean => {
+    const now = new Date();
+    const dayName = now.toLocaleDateString('es-PY', { weekday: 'long' }).toLowerCase();
+    const hours = supermarket.opening_hours?.[dayName];
+    if (!hours || hours === 'Cerrado') return false;
+    
+    const timeMatch = hours.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+    if (!timeMatch) return true;
+    
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const openMinutes = parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+    const closeMinutes = parseInt(timeMatch[3]) * 60 + parseInt(timeMatch[4]);
+    
+    return currentMinutes >= openMinutes && currentMinutes <= closeMinutes;
+  };
+
+  const filteredSupermarkets = useMemo(() => {
+    let filtered = supermarkets.filter((s) => {
+      const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.address?.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesSearch;
+    });
+
+    if (selectedFilter === 'open') {
+      filtered = filtered.filter((s) => isStoreOpen(s));
+    } else if (selectedFilter === 'nearby') {
+      filtered = filtered
+        .map((s) => ({
+          ...s,
+          distance_km: calculateDistance(
+            userLocation[0], userLocation[1],
+            s.latitude, s.longitude
+          ),
+        }))
+        .sort((a, b) => (a.distance_km || 0) - (b.distance_km || 0))
+        .slice(0, 10);
+    }
+
+    return filtered;
+  }, [supermarkets, searchQuery, selectedFilter, userLocation]);
 
   const getDirections = (lat: number, lng: number) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;

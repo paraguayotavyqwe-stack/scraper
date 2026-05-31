@@ -37,8 +37,8 @@ const scrapers: ScraperConfig[] = [
   { name: 'Stock', slug: 'stock', scraper: new StockScraper(), enabled: true },
   { name: 'Casa Rica', slug: 'casa-rica', scraper: new CasaRicaScraper(), enabled: true },
   { name: 'Biggie', slug: 'biggie', scraper: new BiggieScraper(), enabled: true },
-  { name: 'Disco', slug: 'disco', scraper: new DiscoScraper(), enabled: true },
-  { name: 'Villa Lima', slug: 'villa-lima', scraper: new VillaLimaScraper(), enabled: true },
+  { name: 'Disco', slug: 'disco', scraper: new DiscoScraper(), enabled: false },
+  { name: 'Villa Lima', slug: 'villa-lima', scraper: new VillaLimaScraper(), enabled: false },
 ];
 
 async function ensureSupermarketExists(name: string, slug: string): Promise<string | null> {

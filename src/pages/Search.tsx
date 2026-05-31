@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search as SearchIcon, Filter, TrendingDown, ShoppingCart } from 'lucide-react';
+import { Search as SearchIcon, Filter, TrendingDown, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../integrations/supabase/client';
 import { formatCurrency, cn } from '../lib/utils';
 import { useShoppingListStore } from '../stores/shopping-list-store';
@@ -27,12 +27,23 @@ interface Category {
   slug: string;
 }
 
+const ITEMS_PER_PAGE = 20;
+
 const sortOptions = [
   { value: 'price_asc', label: 'Menor precio' },
   { value: 'price_desc', label: 'Mayor precio' },
   { value: 'name', label: 'Nombre' },
   { value: 'discount', label: 'Mayor descuento' },
 ];
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debouncedValue;
+}
 
 export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,9 +54,11 @@ export function Search() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState('price_asc');
   const [maxPrice, setMaxPrice] = useState<number>(100000);
+  const [currentPage, setCurrentPage] = useState(1);
   const addItem = useShoppingListStore((state) => state.addItem);
 
   const searchQuery = searchParams.get('q') || '';
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -62,6 +75,7 @@ export function Search() {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setCurrentPage(1);
       setIsLoading(true);
       
       let query = supabase
@@ -78,8 +92,8 @@ export function Search() {
         `)
         .eq('is_active', true);
 
-      if (searchQuery) {
-        query = query.ilike('name', `%${searchQuery}%`);
+      if (debouncedSearch) {
+        query = query.ilike('name', `%${debouncedSearch}%`);
       }
 
       if (selectedCategory) {
@@ -91,26 +105,21 @@ export function Search() {
       if (!error && data) {
         let filtered = data as unknown as ProductWithPrices[];
         
-        // Filter by max price
         filtered = filtered.filter((p) =>
           p.product_prices.some((pp) => pp.price <= maxPrice)
         );
 
-        // Sort
+        const getBestPriceForProduct = (p: ProductWithPrices): number => {
+          if (!p.product_prices?.length) return Infinity;
+          return Math.min(...p.product_prices.map((pp) => pp.price));
+        };
+
         switch (sortBy) {
           case 'price_asc':
-            filtered.sort((a, b) => {
-              const priceA = a.product_prices[0]?.price || Infinity;
-              const priceB = b.product_prices[0]?.price || Infinity;
-              return priceA - priceB;
-            });
+            filtered.sort((a, b) => getBestPriceForProduct(a) - getBestPriceForProduct(b));
             break;
           case 'price_desc':
-            filtered.sort((a, b) => {
-              const priceA = a.product_prices[0]?.price || 0;
-              const priceB = b.product_prices[0]?.price || 0;
-              return priceB - priceA;
-            });
+            filtered.sort((a, b) => getBestPriceForProduct(b) - getBestPriceForProduct(a));
             break;
           case 'name':
             filtered.sort((a, b) => a.name.localeCompare(b.name));
@@ -135,7 +144,13 @@ export function Search() {
     };
 
     fetchProducts();
-  }, [searchQuery, selectedCategory, sortBy, maxPrice]);
+  }, [debouncedSearch, selectedCategory, sortBy, maxPrice]);
+
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+  const paginatedProducts = products.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const getBestPrice = (product: ProductWithPrices) => {
     if (!product.product_prices?.length) return null;
@@ -293,107 +308,146 @@ export function Search() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((product, index) => {
-              const bestPrice = getBestPrice(product);
-              const priceChange = getPriceChange(product);
-              
-              return (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.03 }}
-                >
-                  <div className="card overflow-hidden group h-full flex flex-col">
-                    <Link to={`/product/${product.slug}`} className="block">
-                      <div className="aspect-square bg-surface-light flex items-center justify-center p-4 relative">
-                        {product.image_url ? (
-                          <img
-                            src={product.image_url}
-                            alt={product.name}
-                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center">
-                            <ShoppingCart size={32} className="text-text-muted" />
-                          </div>
-                        )}
-                        
-                        {/* Badges */}
-                        <div className="absolute top-2 left-2 flex flex-col gap-1">
-                          {priceChange !== null && priceChange < 0 && (
-                            <span className="badge badge-success flex items-center gap-1">
-                              <TrendingDown size={12} />
-                              {Math.abs(priceChange).toFixed(0)}%
-                            </span>
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {paginatedProducts.map((product, index) => {
+                const bestPrice = getBestPrice(product);
+                const priceChange = getPriceChange(product);
+                
+                return (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.03 }}
+                  >
+                    <div className="card overflow-hidden group h-full flex flex-col">
+                      <Link to={`/product/${product.slug}`} className="block">
+                        <div className="aspect-square bg-surface-light flex items-center justify-center p-4 relative">
+                          {product.image_url ? (
+                            <img
+                              src={product.image_url}
+                              alt={product.name}
+                              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center">
+                              <ShoppingCart size={32} className="text-text-muted" />
+                            </div>
                           )}
-                          {bestPrice?.is_on_sale && (
-                            <span className="badge badge-warning">Oferta</span>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                    
-                    <div className="p-4 flex-1 flex flex-col">
-                      <div className="flex-1">
-                        {product.categories && (
-                          <span className="text-xs text-text-muted">{product.categories.name}</span>
-                        )}
-                        <Link to={`/product/${product.slug}`}>
-                          <h3 className="font-semibold line-clamp-2 mb-2 hover:text-primary transition-colors">
-                            {product.name}
-                          </h3>
-                        </Link>
-                        {product.brand && (
-                          <p className="text-sm text-text-muted mb-2">{product.brand}</p>
-                        )}
-                      </div>
-                      
-                      {/* Price Section */}
-                      {bestPrice && (
-                        <div className="mt-auto">
-                          <div className="flex items-baseline gap-2 mb-1">
-                            <span className="text-xl font-bold text-primary">
-                              {formatCurrency(bestPrice.price)}
-                            </span>
-                            {bestPrice.original_price && (
-                              <span className="text-sm text-text-muted line-through">
-                                {formatCurrency(bestPrice.original_price)}
+                          
+                          {/* Badges */}
+                          <div className="absolute top-2 left-2 flex flex-col gap-1">
+                            {priceChange !== null && priceChange < 0 && (
+                              <span className="badge badge-success flex items-center gap-1">
+                                <TrendingDown size={12} />
+                                {Math.abs(priceChange).toFixed(0)}%
                               </span>
                             )}
+                            {bestPrice?.is_on_sale && (
+                              <span className="badge badge-warning">Oferta</span>
+                            )}
                           </div>
-                          <p className="text-xs text-text-muted mb-3">
-                            en {bestPrice.supermarkets.name}
-                          </p>
-                          
-                          {/* Add to List Button */}
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              addItem({
-                                product_id: product.id,
-                                product_name: product.name,
-                                product_image: product.image_url || undefined,
-                                quantity: 1,
-                                is_checked: false,
-                                best_price: bestPrice.price,
-                                best_supermarket: bestPrice.supermarkets.name,
-                              });
-                            }}
-                            className="w-full py-2 px-3 rounded-xl bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors flex items-center justify-center gap-2"
-                          >
-                            <ShoppingCart size={14} />
-                            Agregar a mi lista
-                          </button>
                         </div>
-                      )}
+                      </Link>
+                      
+                      <div className="p-4 flex-1 flex flex-col">
+                        <div className="flex-1">
+                          {product.categories && (
+                            <span className="text-xs text-text-muted">{product.categories.name}</span>
+                          )}
+                          <Link to={`/product/${product.slug}`}>
+                            <h3 className="font-semibold line-clamp-2 mb-2 hover:text-primary transition-colors">
+                              {product.name}
+                            </h3>
+                          </Link>
+                          {product.brand && (
+                            <p className="text-sm text-text-muted mb-2">{product.brand}</p>
+                          )}
+                        </div>
+                        
+                        {/* Price Section */}
+                        {bestPrice && (
+                          <div className="mt-auto">
+                            <div className="flex items-baseline gap-2 mb-1">
+                              <span className="text-xl font-bold text-primary">
+                                {formatCurrency(bestPrice.price)}
+                              </span>
+                              {bestPrice.original_price && (
+                                <span className="text-sm text-text-muted line-through">
+                                  {formatCurrency(bestPrice.original_price)}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-text-muted mb-3">
+                              en {bestPrice.supermarkets.name}
+                            </p>
+                            
+                            {/* Add to List Button */}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                addItem({
+                                  product_id: product.id,
+                                  product_name: product.name,
+                                  product_image: product.image_url || undefined,
+                                  quantity: 1,
+                                  is_checked: false,
+                                  best_price: bestPrice.price,
+                                  best_supermarket: bestPrice.supermarkets.name,
+                                });
+                              }}
+                              className="w-full py-2 px-3 rounded-xl bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors flex items-center justify-center gap-2"
+                            >
+                              <ShoppingCart size={14} />
+                              Agregar a mi lista
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-4 mt-8">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={cn(
+                    "flex items-center gap-1 px-4 py-2 rounded-xl transition-all",
+                    currentPage === 1
+                      ? "bg-surface-light text-text-muted cursor-not-allowed"
+                      : "bg-surface-light text-text hover:bg-primary hover:text-white"
+                  )}
+                >
+                  <ChevronLeft size={16} />
+                  Anterior
+                </button>
+                
+                <span className="text-text-muted">
+                  Página {currentPage} de {totalPages}
+                </span>
+                
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className={cn(
+                    "flex items-center gap-1 px-4 py-2 rounded-xl transition-all",
+                    currentPage === totalPages
+                      ? "bg-surface-light text-text-muted cursor-not-allowed"
+                      : "bg-surface-light text-text hover:bg-primary hover:text-white"
+                  )}
+                >
+                  Siguiente
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
