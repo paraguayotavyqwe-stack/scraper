@@ -14,13 +14,13 @@ export class CasaRicaScraper extends BaseScraper {
       const categories = [
         { url: 'https://www.casarica.com.py/catalogo/lacteos-c30', name: 'Lácteos' },
         { url: 'https://www.casarica.com.py/catalogo/carnes-y-platos-de-fondo-c332', name: 'Carnes' },
-        { url: 'https://www.casarica.com.py/catalogo/frutas-c178', name: 'Frutas' },
-        { url: 'https://www.casarica.com.py/catalogo/verduras-c179', name: 'Verduras' },
         { url: 'https://www.casarica.com.py/catalogo/bebidas-sin-alcohol-c46', name: 'Bebidas sin Alcohol' },
         { url: 'https://www.casarica.com.py/catalogo/bebidas-con-alcohol-c20', name: 'Bebidas con Alcohol' },
         { url: 'https://www.casarica.com.py/catalogo/articulos-de-limpieza-c125', name: 'Limpieza' },
-        { url: 'https://www.casarica.com.py/catalogo/arroz-c101', name: 'Arroz' },
-        { url: 'https://www.casarica.com.py/catalogo/aceite-de-soja-c102', name: 'Aceite' },
+        { url: 'https://www.casarica.com.py/catalogo/snacks-y-golosinas-c130', name: 'Snacks' },
+        { url: 'https://www.casarica.com.py/catalogo/panaderia-c150', name: 'Panadería' },
+        { url: 'https://www.casarica.com.py/catalogo/queseria-c80', name: 'Quesería' },
+        { url: 'https://www.casarica.com.py/catalogo/fiambreria-c90', name: 'Fiambres' },
       ];
 
       for (const category of categories) {
@@ -30,7 +30,6 @@ export class CasaRicaScraper extends BaseScraper {
           await page.waitForTimeout(5000);
 
           const pageTitle = await page.title();
-          console.log(`Page title: ${pageTitle}`);
           
           if (pageTitle.includes('404')) {
             console.log('⚠️ Page not found, skipping...');
@@ -43,60 +42,64 @@ export class CasaRicaScraper extends BaseScraper {
             await page.waitForTimeout(1500);
           }
 
-          // Extract products - try multiple approaches
+          // Extract products with images
           const categoryProducts = await page.evaluate(() => {
             const items: ScrapedProduct[] = [];
             
-            // Approach 1: Look for product cards with price patterns
-            const allElements = document.querySelectorAll('div, li, article, section');
+            // Look for product elements
+            const productElements = document.querySelectorAll('.product, li.product, article, .card');
             
-            allElements.forEach(el => {
-              const text = el.textContent || '';
-              
-              // Find elements containing ₲ price pattern
-              const priceMatch = text.match(/₲\.?\s*([\d.,]+)/);
-              if (!priceMatch) return;
-              
-              // Check if this element has a product name
-              const nameEl = el.querySelector('h2, h3, h4, .name, .title, strong, b');
-              const name = nameEl?.textContent?.trim() || '';
-              
-              if (!name || name.length < 3) return;
-              
-              const price = parseInt(priceMatch[1].replace(/[.,]/g, ''), 10);
-              if (price <= 0 || price > 10000000) return;
-              
-              // Check for original price (OFERTA format)
-              const origMatch = text.match(/₦\.?\s*([\d.,]+)/g);
-              let originalPrice: number | undefined;
-              
-              if (origMatch && origMatch.length >= 2) {
-                const origPrice = parseInt(origMatch[1].match(/([\d.,]+)/)?.[1]?.replace(/[.,]/g, '') || '0', 10);
-                if (origPrice > price) {
-                  originalPrice = origPrice;
+            productElements.forEach(el => {
+              try {
+                // Get name
+                const nameEl = el.querySelector('h2, h3, h4, .product-title, .name, .woocommerce-loop-product__title');
+                const name = nameEl?.textContent?.trim() || '';
+                
+                if (!name || name.length < 3) return;
+                
+                // Get price
+                const priceEl = el.querySelector('.price ins .woocommerce-Price-amount, .price .woocommerce-Price-amount, .price');
+                const priceText = priceEl?.textContent?.replace(/[^0-9]/g, '') || '0';
+                const price = parseInt(priceText, 10);
+                
+                if (price <= 0 || price > 10000000) return;
+                
+                // Get original price
+                const origEl = el.querySelector('.price del .woocommerce-Price-amount, del');
+                const origText = origEl?.textContent?.replace(/[^0-9]/g, '') || '0';
+                const originalPrice = parseInt(origText, 10);
+                
+                // Get image - try multiple sources
+                let imageUrl: string | undefined;
+                
+                const imgEl = el.querySelector('img');
+                if (imgEl) {
+                  imageUrl = imgEl.getAttribute('src') || undefined;
+                  if (!imageUrl || imageUrl.includes('placeholder')) {
+                    imageUrl = imgEl.getAttribute('data-src') || undefined;
+                  }
+                  if (!imageUrl || imageUrl.includes('placeholder')) {
+                    imageUrl = imgEl.getAttribute('data-lazy-src') || undefined;
+                  }
                 }
-              }
-              
-              // Get image
-              const imgEl = el.querySelector('img');
-              const imageUrl = imgEl?.getAttribute('src') || undefined;
-              
-              // Get link
-              const linkEl = el.querySelector('a') as HTMLAnchorElement;
-              const url = linkEl?.href || '';
-              
-              // Avoid duplicates and UI elements
-              if (!name.match(/^(Buscar|Categoría|Menú|Inicio|Contacto|Ver|Menu|Todos)/i)) {
-                items.push({
-                  name,
-                  price,
-                  originalPrice,
-                  isOnSale: !!originalPrice,
-                  url,
-                  imageUrl,
-                  supermarket: 'Casa Rica',
-                });
-              }
+                
+                // Get link
+                const linkEl = el.querySelector('a[href*="product"]') as HTMLAnchorElement;
+                const url = linkEl?.href || '';
+                
+                // Avoid UI elements
+                if (!name.match(/^(Buscar|Categoría|Menú|Inicio|Contacto|Ver|Menu|Todos|Productos)/i)) {
+                  items.push({
+                    name,
+                    price,
+                    originalPrice: originalPrice > price ? originalPrice : undefined,
+                    isOnSale: originalPrice > price,
+                    url,
+                    imageUrl,
+                    supermarket: 'Casa Rica',
+                  });
+                }
+              } catch (error) {}
             });
             
             return items;
