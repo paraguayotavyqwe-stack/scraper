@@ -116,7 +116,6 @@ export abstract class BaseScraper {
     let imageCount = 0;
     let skippedCount = 0;
 
-    // Get supermarket ID once
     const { data: supermarket } = await this.supabase
       .from('supermarkets')
       .select('id')
@@ -130,151 +129,132 @@ export abstract class BaseScraper {
 
     const supermarketId = supermarket.id;
 
-    // Batch: Get all existing products in one query
     const productNames = products.map((p) => p.name);
-    const { data: existingProducts } = await this.supabase
-      .from('products')
-      .select('id, name, image_url, category_id')
-      .in('name', productNames);
-
+    const allExistingProducts: Array<{ id: string; name: string; image_url: string | null; category_id: string | null }> = [];
+    
+    const IN_CHUNK = 50;
+    for (let i = 0; i < productNames.length; i += IN_CHUNK) {
+      const chunk = productNames.slice(i, i + IN_CHUNK);
+      const { data, error } = await this.supabase
+        .from('products')
+        .select('id, name, image_url, category_id')
+        .in('name', chunk);
+      if (!error && data) allExistingProducts.push(...data);
+    }
+    
     const existingProductsMap = new Map(
-      (existingProducts || []).map((p) => [p.name, p])
+      allExistingProducts.map((p) => [p.name, p])
     );
+    
+    console.log(`📋 Matched ${existingProductsMap.size} existing products out of ${productNames.length} scraped`);
 
-    // Batch: Get all existing prices
     const { data: existingPrices } = await this.supabase
       .from('product_prices')
-      .select('product_id, supermarket_id')
+      .select('product_id')
       .eq('supermarket_id', supermarketId);
 
     const existingPricesSet = new Set(
       (existingPrices || []).map((p) => p.product_id)
     );
 
-    // Process products in batches
-    const BATCH_SIZE = 50;
-    for (let i = 0; i < products.length; i += BATCH_SIZE) {
-      const batch = products.slice(i, i + BATCH_SIZE);
-      const productsToInsert: Array<{
-        name: string;
-        slug: string;
-        brand: string | null;
-        image_url: string;
-        category_id: string | null;
-        is_active: boolean;
-      }> = [];
-      const productImageUpdates: Array<{ id: string; imageUrl: string }> = [];
-      const pricesToUpsert: Array<{
-        product_id: string;
-        supermarket_id: string;
-        price: number;
-        original_price: number | null;
-        is_on_sale: boolean;
-        is_available: boolean;
-        last_checked_at: string;
-      }> = [];
-      const historyToInsert: Array<{
-        product_id: string;
-        supermarket_id: string;
-        price: number;
-      }> = [];
+    // Phase 1: Resolve category IDs for unique category names
+    const uniqueCategories = [...new Set(products.filter((p) => p.category).map((p) => p.category!))];
+    for (const catName of uniqueCategories) {
+      await this.getCategoryId(catName);
+    }
 
-      for (const product of batch) {
-        // Skip products without a real image
-        if (!product.imageUrl) {
-          skippedCount++;
-          continue;
-        }
+    // Phase 2: Separate existing vs new products
+    const productsWithIds: Array<{ product: ScrapedProduct; productId: string; isNew: boolean }> = [];
+    const newProducts: ScrapedProduct[] = [];
 
-        const existing = existingProductsMap.get(product.name);
+    for (const product of products) {
+      if (!product.imageUrl) { skippedCount++; continue; }
 
-        const categoryId = product.category ? await this.getCategoryId(product.category) : null;
+      const existing = existingProductsMap.get(product.name);
+      if (existing) {
+        productsWithIds.push({ product, productId: existing.id, isNew: false });
 
-        if (!existing) {
-          const slug = this.slugify(product.name);
-          productsToInsert.push({
-            name: product.name,
-            slug,
-            brand: product.brand || null,
-            image_url: product.imageUrl,
-            category_id: categoryId,
-            is_active: true,
-          });
-        } else if (!existing.image_url && product.imageUrl) {
-          productImageUpdates.push({ id: existing.id, imageUrl: product.imageUrl });
+        // Update image if missing
+        if (!existing.image_url && product.imageUrl) {
+          await this.supabase.from('products').update({ image_url: product.imageUrl }).eq('id', existing.id);
           imageCount++;
-        } else if (categoryId && !existing.category_id) {
-          await this.supabase
-            .from('products')
-            .update({ category_id: categoryId })
-            .eq('id', existing.id);
         }
-
-        // Get product ID (existing or for new ones, we'll need to insert first)
-        let productId = existing?.id;
-
-        if (!existing && productsToInsert.length > 0) {
-          // For new products, we'll insert and get ID
-          const { data: inserted } = await this.supabase
-            .from('products')
-            .insert(productsToInsert[productsToInsert.length - 1])
-            .select('id')
-            .single();
-          productId = inserted?.id;
-          if (productId) imageCount++;
+        // Update category if missing
+        if (product.category && !existing.category_id) {
+          const catId = this.categoryCache.get(product.category);
+          if (catId) {
+            await this.supabase.from('products').update({ category_id: catId }).eq('id', existing.id);
+          }
         }
-
-        if (!productId) continue;
-
-        // Prepare price upsert
-        pricesToUpsert.push({
-          product_id: productId,
-          supermarket_id: supermarketId,
-          price: product.price,
-          original_price: product.originalPrice || null,
-          is_on_sale: product.isOnSale,
-          is_available: true,
-          last_checked_at: new Date().toISOString(),
-        });
-
-        // Prepare price history
-        if (!existingPricesSet.has(productId)) {
-          historyToInsert.push({
-            product_id: productId,
-            supermarket_id: supermarketId,
-            price: product.price,
-          });
-        }
-
-        savedCount++;
-      }
-
-      // Batch insert new products
-      if (productsToInsert.length > 0) {
-        await this.supabase.from('products').insert(productsToInsert);
-      }
-
-      // Batch upsert prices
-      if (pricesToUpsert.length > 0) {
-        await this.supabase
-          .from('product_prices')
-          .upsert(pricesToUpsert, { onConflict: 'product_id,supermarket_id' });
-      }
-
-      // Batch insert price history
-      if (historyToInsert.length > 0) {
-        await this.supabase.from('price_history').insert(historyToInsert);
-      }
-
-      // Batch update images
-      for (const update of productImageUpdates) {
-        await this.supabase
-          .from('products')
-          .update({ image_url: update.imageUrl })
-          .eq('id', update.id);
+      } else {
+        newProducts.push(product);
       }
     }
 
+    // Phase 3: Batch insert new products
+    if (newProducts.length > 0) {
+      const BATCH = 50;
+      for (let i = 0; i < newProducts.length; i += BATCH) {
+        const chunk = newProducts.slice(i, i + BATCH);
+        const toInsert = chunk.map((p) => ({
+          name: p.name,
+          slug: this.slugify(p.name),
+          brand: p.brand || null,
+          image_url: p.imageUrl!,
+          category_id: p.category ? (this.categoryCache.get(p.category) || null) : null,
+          is_active: true,
+        }));
+
+        const { data: inserted } = await this.supabase
+          .from('products')
+          .insert(toInsert)
+          .select('id, name');
+
+        if (inserted) {
+          for (const ins of inserted) {
+            const prod = chunk.find((p) => p.name === ins.name);
+            if (prod) {
+              productsWithIds.push({ product: prod, productId: ins.id, isNew: true });
+              imageCount++;
+            }
+          }
+        }
+      }
+    }
+
+    // Phase 4: Batch upsert prices
+    const pricesToUpsert = productsWithIds.map(({ product, productId }) => ({
+      product_id: productId,
+      supermarket_id: supermarketId,
+      price: product.price,
+      original_price: product.originalPrice || null,
+      is_on_sale: product.isOnSale,
+      is_available: true,
+      last_checked_at: new Date().toISOString(),
+    }));
+
+    const BATCH = 50;
+    for (let i = 0; i < pricesToUpsert.length; i += BATCH) {
+      const chunk = pricesToUpsert.slice(i, i + BATCH);
+      await this.supabase
+        .from('product_prices')
+        .upsert(chunk, { onConflict: 'product_id,supermarket_id' });
+    }
+
+    // Phase 5: Insert price history for new prices
+    const historyToInsert = productsWithIds
+      .filter(({ productId }) => !existingPricesSet.has(productId))
+      .map(({ product, productId }) => ({
+        product_id: productId,
+        supermarket_id: supermarketId,
+        price: product.price,
+      }));
+
+    for (let i = 0; i < historyToInsert.length; i += BATCH) {
+      await this.supabase.from('price_history').insert(historyToInsert.slice(i, i + BATCH));
+    }
+
+    savedCount = pricesToUpsert.length;
     console.log(`📊 Saved ${savedCount} prices, ${imageCount} new images, ${skippedCount} skipped (no image)`);
   }
 
