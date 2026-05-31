@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { motion } from 'framer-motion';
 import { Navigation, Clock, Phone, ExternalLink, Search } from 'lucide-react';
 import { supabase } from '../integrations/supabase/client';

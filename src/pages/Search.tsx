@@ -21,12 +21,6 @@ interface ProductWithPrices {
   }[];
 }
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
-
 const ITEMS_PER_PAGE = 20;
 
 const sortOptions = [
@@ -48,10 +42,8 @@ function useDebounce<T>(value: T, delay: number): T {
 export function Search() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<ProductWithPrices[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState('price_asc');
   const [maxPrice, setMaxPrice] = useState<number>(100000);
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,19 +51,6 @@ export function Search() {
 
   const searchQuery = searchParams.get('q') || '';
   const debouncedSearch = useDebounce(searchQuery, 300);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const { data } = await supabase
-        .from('categories')
-        .select('id, name, slug')
-        .order('name');
-      
-      if (data) setCategories(data as Category[]);
-    };
-
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -94,10 +73,6 @@ export function Search() {
 
       if (debouncedSearch) {
         query = query.ilike('name', `%${debouncedSearch}%`);
-      }
-
-      if (selectedCategory) {
-        query = query.eq('category_id', selectedCategory);
       }
 
       const { data, error } = await query;
@@ -144,7 +119,7 @@ export function Search() {
     };
 
     fetchProducts();
-  }, [debouncedSearch, selectedCategory, sortBy, maxPrice]);
+  }, [debouncedSearch, sortBy, maxPrice]);
 
   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
   const paginatedProducts = products.slice(
@@ -205,31 +180,6 @@ export function Search() {
             <Filter size={18} />
             Filtros
           </button>
-
-          {/* Category Pills */}
-          <div className="flex-1 overflow-x-auto flex gap-2 pb-2 md:pb-0">
-            <button
-              onClick={() => setSelectedCategory('')}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
-                !selectedCategory ? "bg-primary text-white" : "bg-surface-light text-text-muted hover:text-text"
-              )}
-            >
-              Todos
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
-                  selectedCategory === cat.id ? "bg-primary text-white" : "bg-surface-light text-text-muted hover:text-text"
-                )}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
 
           {/* Sort */}
           <select
@@ -300,7 +250,6 @@ export function Search() {
             <button
               onClick={() => {
                 setSearchParams({});
-                setSelectedCategory('');
               }}
               className="btn-primary"
             >
