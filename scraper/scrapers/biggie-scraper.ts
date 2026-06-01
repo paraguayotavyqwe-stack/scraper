@@ -31,7 +31,7 @@ export class BiggieScraper extends BaseScraper {
           console.log(`\n📦 Fetching ${categorySlug}...`);
           
           let skip = 0;
-          const take = 100;
+          const take = 50;
           let hasMore = true;
           let categoryCount = 0;
 
