@@ -71,18 +71,42 @@ export function Product() {
       if (productData) {
         setProduct(productData as unknown as ProductDetail);
 
-        // Fetch prices
-        const { data: pricesData } = await supabase
-          .from('product_prices')
-          .select(`
-            *,
-            supermarkets(id, name, slug, logo_url, address)
-          `)
-          .eq('product_id', productData.id)
-          .order('price', { ascending: true });
+        // Fetch prices using RPC (includes mapped products)
+        const { data: rpcPrices, error: rpcError } = await supabase
+          .rpc('get_all_prices_for_product' as any, { product_id_param: productData.id });
 
-        if (pricesData) {
-          setPrices(pricesData as unknown as PriceEntry[]);
+        if (!rpcError && rpcPrices && rpcPrices.length > 0) {
+          // Map RPC result to PriceEntry format
+          const mappedPrices: PriceEntry[] = rpcPrices.map((p: any, idx: number) => ({
+            id: `price-${idx}`,
+            price: Number(p.price),
+            original_price: p.original_price ? Number(p.original_price) : null,
+            is_on_sale: p.is_on_sale,
+            is_available: true,
+            last_checked_at: new Date().toISOString(),
+            supermarkets: {
+              id: p.supermarket_slug,
+              name: p.supermarket_name,
+              slug: p.supermarket_slug,
+              logo_url: null,
+              address: null,
+            },
+          }));
+          setPrices(mappedPrices);
+        } else {
+          // Fallback: direct query
+          const { data: pricesData } = await supabase
+            .from('product_prices')
+            .select(`
+              *,
+              supermarkets(id, name, slug, logo_url, address)
+            `)
+            .eq('product_id', productData.id)
+            .order('price', { ascending: true });
+
+          if (pricesData) {
+            setPrices(pricesData as unknown as PriceEntry[]);
+          }
         }
 
         // Fetch price history

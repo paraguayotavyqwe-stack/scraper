@@ -266,4 +266,171 @@ export abstract class BaseScraper {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
   }
+
+  protected normalizeProductName(name: string): string {
+    // Less aggressive: only lowercase + remove accents + remove special chars
+    // Keep numbers and units as they help distinguish products
+    return name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  async saveProducts(products: ScrapedProduct[]): Promise<void> {
+    let savedCount = 0;
+    let matchedCount = 0;
+    let newCount = 0;
+    let skippedCount = 0;
+
+    const { data: supermarket } = await this.supabase
+      .from('supermarkets')
+      .select('id')
+      .eq('slug', this.supermarketSlug)
+      .single();
+
+    if (!supermarket) {
+      console.log(`Supermarket ${this.supermarketSlug} not found, skipping...`);
+      return;
+    }
+
+    const supermarketId = supermarket.id;
+
+    // Fetch ALL existing products from DB
+    const allExistingProducts: Array<{ id: string; name: string; image_url: string | null; category_id: string | null }> = [];
+    const BATCH_SIZE = 5000;
+    let offset = 0;
+    while (true) {
+      const { data, error } = await this.supabase
+        .from('products')
+        .select('id, name, image_url, category_id')
+        .range(offset, offset + BATCH_SIZE - 1);
+      if (error || !data || data.length === 0) break;
+      allExistingProducts.push(...data);
+      if (data.length < BATCH_SIZE) break;
+      offset += BATCH_SIZE;
+    }
+
+    // Build normalized lookup: normalized_name -> existing product
+    const existingByNormalized = new Map<string, typeof allExistingProducts[0]>();
+    for (const p of allExistingProducts) {
+      const norm = this.normalizeProductName(p.name);
+      if (norm.length > 3) {
+        existingByNormalized.set(norm, p);
+      }
+    }
+
+    console.log(`📋 Loaded ${allExistingProducts.length} existing products, ${existingByNormalized.size} unique normalized names`);
+
+    const { data: existingPrices } = await this.supabase
+      .from('product_prices')
+      .select('product_id')
+      .eq('supermarket_id', supermarketId);
+
+    const existingPricesSet = new Set(
+      (existingPrices || []).map((p) => p.product_id)
+    );
+
+    // Phase 1: Resolve category IDs
+    const uniqueCategories = [...new Set(products.filter((p) => p.category).map((p) => p.category!))];
+    for (const catName of uniqueCategories) {
+      await this.getCategoryId(catName);
+    }
+
+    // Phase 2: Match scraped products to existing DB products by normalized name
+    const productsWithIds: Array<{ product: ScrapedProduct; productId: string; isNew: boolean }> = [];
+    const newProducts: ScrapedProduct[] = [];
+
+    for (const product of products) {
+      if (!product.imageUrl) { skippedCount++; continue; }
+
+      const norm = this.normalizeProductName(product.name);
+      const existing = norm.length > 3 ? existingByNormalized.get(norm) : undefined;
+
+      if (existing) {
+        matchedCount++;
+        productsWithIds.push({ product, productId: existing.id, isNew: false });
+
+        if (!existing.image_url && product.imageUrl) {
+          await this.supabase.from('products').update({ image_url: product.imageUrl }).eq('id', existing.id);
+        }
+        if (product.category && !existing.category_id) {
+          const catId = this.categoryCache.get(product.category);
+          if (catId) {
+            await this.supabase.from('products').update({ category_id: catId }).eq('id', existing.id);
+          }
+        }
+      } else {
+        newProducts.push(product);
+      }
+    }
+
+    // Phase 3: Batch insert new products
+    if (newProducts.length > 0) {
+      const BATCH = 50;
+      for (let i = 0; i < newProducts.length; i += BATCH) {
+        const chunk = newProducts.slice(i, i + BATCH);
+        const toInsert = chunk.map((p) => ({
+          name: p.name,
+          slug: this.slugify(p.name),
+          brand: p.brand || null,
+          image_url: p.imageUrl!,
+          category_id: p.category ? (this.categoryCache.get(p.category) || null) : null,
+          is_active: true,
+        }));
+
+        const { data: inserted } = await this.supabase
+          .from('products')
+          .insert(toInsert)
+          .select('id, name');
+
+        if (inserted) {
+          for (const ins of inserted) {
+            const prod = chunk.find((p) => p.name === ins.name);
+            if (prod) {
+              productsWithIds.push({ product: prod, productId: ins.id, isNew: true });
+              newCount++;
+            }
+          }
+        }
+      }
+    }
+
+    // Phase 4: Batch upsert prices
+    const pricesToUpsert = productsWithIds.map(({ product, productId }) => ({
+      product_id: productId,
+      supermarket_id: supermarketId,
+      price: product.price,
+      original_price: product.originalPrice || null,
+      is_on_sale: product.isOnSale,
+      is_available: true,
+      last_checked_at: new Date().toISOString(),
+    }));
+
+    const BATCH = 50;
+    for (let i = 0; i < pricesToUpsert.length; i += BATCH) {
+      const chunk = pricesToUpsert.slice(i, i + BATCH);
+      await this.supabase
+        .from('product_prices')
+        .upsert(chunk, { onConflict: 'product_id,supermarket_id' });
+    }
+
+    // Phase 5: Insert price history for new prices
+    const historyToInsert = productsWithIds
+      .filter(({ productId }) => !existingPricesSet.has(productId))
+      .map(({ product, productId }) => ({
+        product_id: productId,
+        supermarket_id: supermarketId,
+        price: product.price,
+      }));
+
+    for (let i = 0; i < historyToInsert.length; i += BATCH) {
+      await this.supabase.from('price_history').insert(historyToInsert.slice(i, i + BATCH));
+    }
+
+    savedCount = pricesToUpsert.length;
+    console.log(`📊 ${this.supermarketName}: ${savedCount} prices saved (${matchedCount} matched to existing, ${newCount} new products, ${skippedCount} skipped)`);
+  }
 }
