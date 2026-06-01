@@ -1,8 +1,10 @@
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Trash2, Plus, Minus, ShoppingCart, MapPin, Clock, Car, Check, Store } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingCart, MapPin, Clock, Car, Check, Store, Sparkles } from 'lucide-react';
 import { useShoppingListStore } from '../stores/shopping-list-store';
-import { formatCurrency } from '../lib/utils';
+import { supabase } from '../integrations/supabase/client';
+import { formatCurrency, cn } from '../lib/utils';
 
 export function ShoppingList() {
   const {
@@ -11,11 +13,71 @@ export function ShoppingList() {
     updateQuantity,
     toggleChecked,
     clearList,
-    totalCost,
   } = useShoppingListStore();
+
+  const [supermarketPrices, setSupermarketPrices] = useState<Record<string, Record<string, number>>>({});
+  const [bestStore, setBestStore] = useState<{ name: string; total: number; savings: number } | null>(null);
 
   const checkedItems = items.filter((i) => i.is_checked);
   const uncheckedItems = items.filter((i) => !i.is_checked);
+
+  // Fetch all prices for list items
+  useEffect(() => {
+    if (uncheckedItems.length === 0) return;
+
+    const fetchPrices = async () => {
+      const productIds = uncheckedItems.map((i) => i.product_id);
+
+      const { data } = await supabase
+        .from('product_prices')
+        .select('product_id, price, supermarkets!inner(name)')
+        .in('product_id', productIds)
+        .eq('is_available', true);
+
+      if (!data) return;
+
+      // Build map: product_id -> { supermarket_name -> price }
+      const pricesMap: Record<string, Record<string, number>> = {};
+      for (const row of data as any[]) {
+        if (!pricesMap[row.product_id]) {
+          pricesMap[row.product_id] = {};
+        }
+        pricesMap[row.product_id][row.supermarkets.name] = row.price;
+      }
+
+      setSupermarketPrices(pricesMap);
+
+      // Calculate best store for whole list
+      const storeTotals: Record<string, number> = {};
+
+      for (const item of uncheckedItems) {
+        const storePrices = pricesMap[item.product_id];
+        if (!storePrices || Object.keys(storePrices).length === 0) {
+          continue;
+        }
+        for (const [store, price] of Object.entries(storePrices)) {
+          if (!storeTotals[store]) storeTotals[store] = 0;
+          storeTotals[store] += price * item.quantity;
+        }
+      }
+
+      if (Object.keys(storeTotals).length > 0) {
+        const sorted = Object.entries(storeTotals).sort((a, b) => a[1] - b[1]);
+        const cheapest = sorted[0];
+        const currentTotal = uncheckedItems.reduce(
+          (sum, item) => sum + (item.best_price || 0) * item.quantity,
+          0
+        );
+        setBestStore({
+          name: cheapest[0],
+          total: cheapest[1],
+          savings: Math.max(0, currentTotal - cheapest[1]),
+        });
+      }
+    };
+
+    fetchPrices();
+  }, [uncheckedItems]);
 
   // Group by supermarket
   const groupedBySupermarket = uncheckedItems.reduce((acc, item) => {
@@ -33,10 +95,34 @@ export function ShoppingList() {
     total: items.reduce((sum, item) => sum + (item.best_price || 0) * item.quantity, 0),
   }));
 
-  const estimatedSavings = items.reduce((sum, item) => {
-    const avgPrice = (item.best_price || 0) * 1.15;
-    return sum + (avgPrice - (item.best_price || 0)) * item.quantity;
-  }, 0);
+  // Calculate what each store would cost
+  const storeCostAnalysis = Object.entries(supermarketPrices).length > 0
+    ? (() => {
+        const storeTotals: Record<string, { total: number; foundCount: number }> = {};
+        for (const item of uncheckedItems) {
+          const storePrices = supermarketPrices[item.product_id];
+          if (!storePrices) continue;
+          for (const [store, price] of Object.entries(storePrices)) {
+            if (!storeTotals[store]) storeTotals[store] = { total: 0, foundCount: 0 };
+            storeTotals[store].total += price * item.quantity;
+            storeTotals[store].foundCount++;
+          }
+        }
+        return Object.entries(storeTotals)
+          .map(([name, data]) => ({
+            name,
+            total: data.total,
+            foundCount: data.foundCount,
+            coverage: Math.round((data.foundCount / uncheckedItems.length) * 100),
+          }))
+          .sort((a, b) => a.total - b.total);
+      })()
+    : [];
+
+  const currentTotal = uncheckedItems.reduce(
+    (sum, item) => sum + (item.best_price || 0) * item.quantity,
+    0
+  );
 
   if (items.length === 0) {
     return (
@@ -219,53 +305,103 @@ export function ShoppingList() {
 
           {/* Summary Sidebar */}
           <div className="space-y-6">
+            {/* Best Store Recommendation */}
+            {bestStore && bestStore.savings > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="card p-6 gradient-primary"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles size={20} className="text-white" />
+                  <h3 className="font-bold text-white">Mejor Tienda para tu Lista</h3>
+                </div>
+                <p className="text-white/80 text-sm mb-3">
+                  Si comprás todo en <strong className="text-white">{bestStore.name}</strong>:
+                </p>
+                <div className="flex items-baseline gap-3 mb-2">
+                  <span className="text-2xl font-bold text-white">
+                    {formatCurrency(bestStore.total)}
+                  </span>
+                  <span className="text-white/60 text-sm line-through">
+                    {formatCurrency(currentTotal)}
+                  </span>
+                </div>
+                <div className="bg-white/20 rounded-lg px-3 py-1.5 inline-block">
+                  <span className="text-white font-bold text-sm">
+                    Ahorrás {formatCurrency(bestStore.savings)}
+                  </span>
+                </div>
+              </motion.div>
+            )}
+
             {/* Total Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="card p-6 sticky top-24"
+              className="card p-6"
             >
               <h3 className="font-semibold mb-4">Resumen</h3>
               
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
                   <span className="text-text-muted">Subtotal</span>
-                  <span className="font-medium">{formatCurrency(totalCost)}</span>
+                  <span className="font-medium">{formatCurrency(currentTotal)}</span>
                 </div>
-                <div className="flex justify-between text-primary">
-                  <span>Ahorro estimado</span>
-                  <span className="font-bold">{formatCurrency(estimatedSavings)}</span>
-                </div>
+                {bestStore && bestStore.savings > 0 && (
+                  <div className="flex justify-between text-primary">
+                    <span>Ahorro potencial</span>
+                    <span className="font-bold">{formatCurrency(bestStore.savings)}</span>
+                  </div>
+                )}
                 <div className="border-t border-border pt-3">
                   <div className="flex justify-between">
                     <span className="font-semibold">Total estimado</span>
-                    <span className="text-xl font-bold text-primary">{formatCurrency(totalCost)}</span>
+                    <span className="text-xl font-bold text-primary">{formatCurrency(currentTotal)}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Supermarket Breakdown */}
-              {supermarketTotals.length > 0 && (
+              {/* Store Cost Analysis */}
+              {storeCostAnalysis.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-text-muted mb-3">Por supermercado:</h4>
+                  <h4 className="text-sm font-medium text-text-muted mb-3 flex items-center gap-2">
+                    <Store size={14} />
+                    Costo total por supermercado:
+                  </h4>
                   <div className="space-y-2">
-                    {supermarketTotals.map((supermarket) => (
-                      <div
-                        key={supermarket.name}
-                        className="flex items-center justify-between p-3 rounded-xl bg-surface-light"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                            <Store size={14} className="text-primary" />
-                          </div>
+                    {storeCostAnalysis.slice(0, 5).map((store, idx) => {
+                      const isBest = idx === 0;
+                      const savingsFromBest = store.total - storeCostAnalysis[0].total;
+                      return (
+                        <div
+                          key={store.name}
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-xl transition-all",
+                            isBest ? "bg-primary/10 border border-primary/30" : "bg-surface-light"
+                          )}
+                        >
                           <div>
-                            <p className="text-sm font-medium">{supermarket.name}</p>
-                            <p className="text-xs text-text-muted">{supermarket.items.length} productos</p>
+                            <p className={cn("text-sm font-medium", isBest && "text-primary")}>
+                              {store.name}
+                            </p>
+                            <p className="text-xs text-text-muted">
+                              {store.foundCount}/{uncheckedItems.length} productos ({store.coverage}%)
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className={cn("font-medium", isBest ? "text-primary" : "")}>
+                              {formatCurrency(store.total)}
+                            </p>
+                            {!isBest && savingsFromBest > 0 && (
+                              <p className="text-xs text-danger">
+                                +{formatCurrency(savingsFromBest)}
+                              </p>
+                            )}
                           </div>
                         </div>
-                        <span className="font-medium">{formatCurrency(supermarket.total)}</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -276,22 +412,22 @@ export function ShoppingList() {
                   <Clock size={18} className="text-secondary" />
                   <div>
                     <p className="text-sm font-medium">Tiempo estimado</p>
-                    <p className="text-xs text-text-muted">~{Math.max(15, items.length * 2)} minutos</p>
+                    <p className="text-xs text-text-muted">~{Math.max(15, uncheckedItems.length * 2)} minutos</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-light">
                   <Car size={18} className="text-accent" />
                   <div>
                     <p className="text-sm font-medium">Combustible estimado</p>
-                    <p className="text-xs text-text-muted">Gs. {supermarketTotals.length * 5000}</p>
+                    <p className="text-xs text-text-muted">Gs. {(supermarketTotals.length - 1) * 5000}</p>
                   </div>
                 </div>
               </div>
 
-              <button className="btn-primary w-full flex items-center justify-center gap-2">
+              <Link to="/map" className="btn-primary w-full flex items-center justify-center gap-2">
                 <MapPin size={18} />
                 Ver ruta en el mapa
-              </button>
+              </Link>
             </motion.div>
           </div>
         </div>

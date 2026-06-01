@@ -11,6 +11,8 @@ import { ShoppingList } from './pages/ShoppingList';
 import { Map } from './pages/Map';
 import { Dashboard } from './pages/Dashboard';
 import { Auth } from './pages/Auth';
+import { Deals } from './pages/Deals';
+import { Favorites } from './pages/Favorites';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,6 +49,8 @@ function App() {
             <Route path="shopping-list" element={<ShoppingList />} />
             <Route path="map" element={<Map />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="deals" element={<Deals />} />
+            <Route path="favorites" element={<Favorites />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ShoppingCart, Heart, Bell, MapPin, TrendingUp, Star, Store } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Heart, MapPin, TrendingUp, Star, Store } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../integrations/supabase/client';
 import { formatCurrency, formatDate, cn } from '../lib/utils';
 import { useShoppingListStore } from '../stores/shopping-list-store';
-import { useAuthStore } from '../stores/auth-store';
+import { useFavoritesStore } from '../stores/favorites-store';
 
 interface ProductDetail {
   id: string;
@@ -48,7 +48,12 @@ export function Product() {
   const [priceHistory, setPriceHistory] = useState<PriceHistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const addItem = useShoppingListStore((state) => state.addItem);
-  const { user } = useAuthStore();
+  const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(() => {
+    if (product) setIsFav(isFavorite(product.id));
+  }, [product, isFavorite]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -238,16 +243,31 @@ export function Product() {
                 <ShoppingCart size={20} />
                 Agregar a mi lista
               </button>
-              {user && (
-                <>
-                  <button className="btn-secondary p-4">
-                    <Heart size={20} />
-                  </button>
-                  <button className="btn-secondary p-4">
-                    <Bell size={20} />
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() => {
+                  if (!product) return;
+                  if (isFav) {
+                    removeFavorite(product.id);
+                    setIsFav(false);
+                  } else {
+                    addFavorite({
+                      product_id: product.id,
+                      product_name: product.name,
+                      product_slug: product.slug,
+                      product_image: product.image_url || undefined,
+                    });
+                    setIsFav(true);
+                  }
+                }}
+                className={cn(
+                  'p-4 rounded-xl transition-all',
+                  isFav
+                    ? 'bg-danger/20 text-danger border border-danger/30'
+                    : 'btn-secondary'
+                )}
+              >
+                <Heart size={20} className={isFav ? 'fill-current' : ''} />
+              </button>
             </div>
 
             {/* Product Details */}

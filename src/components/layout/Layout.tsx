@@ -1,17 +1,19 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Home, Search, ShoppingCart, Map, BarChart3, Menu, X, LogIn, User } from 'lucide-react';
+import { Home, Search, ShoppingCart, Map, Menu, X, LogIn, User, Tag, Heart } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../stores/auth-store';
 import { useShoppingListStore } from '../../stores/shopping-list-store';
+import { useFavoritesStore } from '../../stores/favorites-store';
 import { cn } from '../../lib/utils';
 
 const navItems = [
   { path: '/', label: 'Inicio', icon: Home },
   { path: '/search', label: 'Buscar', icon: Search },
+  { path: '/deals', label: 'Ofertas', icon: Tag },
   { path: '/shopping-list', label: 'Mi Lista', icon: ShoppingCart },
+  { path: '/favorites', label: 'Favoritos', icon: Heart },
   { path: '/map', label: 'Mapa', icon: Map },
-  { path: '/dashboard', label: 'Dashboard', icon: BarChart3 },
 ];
 
 export function Layout() {
@@ -19,6 +21,7 @@ export function Layout() {
   const location = useLocation();
   const { user } = useAuthStore();
   const items = useShoppingListStore((state) => state.items);
+  const favorites = useFavoritesStore((state) => state.favorites);
 
   return (
     <div className="min-h-screen bg-background">
@@ -55,6 +58,11 @@ export function Layout() {
                     {item.path === '/shopping-list' && items.length > 0 && (
                       <span className="bg-primary text-white text-xs font-bold px-2 py-0.5 rounded-full">
                         {items.length}
+                      </span>
+                    )}
+                    {item.path === '/favorites' && favorites.length > 0 && (
+                      <span className="bg-danger text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                        {favorites.length}
                       </span>
                     )}
                   </Link>
@@ -147,6 +155,11 @@ export function Layout() {
                             {items.length}
                           </span>
                         )}
+                        {item.path === '/favorites' && favorites.length > 0 && (
+                          <span className="ml-auto bg-danger text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                            {favorites.length}
+                          </span>
+                        )}
                       </Link>
                     );
                   })}
@@ -211,6 +224,11 @@ export function Layout() {
                 {item.path === '/shopping-list' && items.length > 0 && (
                   <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                     {items.length}
+                  </span>
+                )}
+                {item.path === '/favorites' && favorites.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-danger text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                    {favorites.length}
                   </span>
                 )}
               </Link>

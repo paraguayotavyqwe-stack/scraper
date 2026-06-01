@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, TrendingDown, MapPin, ShoppingCart, ArrowRight, Zap, Shield } from 'lucide-react';
+import { Search, TrendingDown, ShoppingCart, ArrowRight, Zap, Shield, Tag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../integrations/supabase/client';
 import { formatCurrency } from '../lib/utils';
@@ -12,9 +12,9 @@ const features = [
     description: 'Encuentra los mejores precios en todos los supermercados de Asunción',
   },
   {
-    icon: MapPin,
-    title: 'Supermercados Cercanos',
-    description: 'Descubre los supermercados más cercanos a tu ubicación',
+    icon: Tag,
+    title: 'Ofertas del Día',
+    description: 'Descubrí las ofertas activas y ahorrá aún más en tus compras',
   },
   {
     icon: ShoppingCart,
@@ -38,6 +38,18 @@ interface Product {
   product_prices: { price: number; original_price: number | null }[];
 }
 
+interface DealProduct {
+  id: string;
+  name: string;
+  slug: string;
+  image_url: string | null;
+  product_prices: {
+    price: number;
+    original_price: number | null;
+    supermarkets: { name: string };
+  }[];
+}
+
 interface Supermarket {
   id: string;
   name: string;
@@ -47,8 +59,10 @@ interface Supermarket {
 
 export function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [dealProducts, setDealProducts] = useState<DealProduct[]>([]);
   const [supermarkets, setSupermarkets] = useState<Supermarket[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [dynamicStats, setDynamicStats] = useState(stats);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,8 +78,63 @@ export function Home() {
         .eq('is_active', true)
         .limit(6);
 
+      // Fetch deals
+      const { data: deals } = await supabase
+        .from('product_prices')
+        .select(`
+          price, original_price,
+          products!inner(id, name, slug, image_url, is_active),
+          supermarkets(name)
+        `)
+        .eq('is_on_sale', true)
+        .eq('products.is_active', true)
+        .order('price', { ascending: true })
+        .limit(20);
+
+      // Fetch dynamic counts
+      const { count: productCount } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+
+      const { count: marketCount } = await supabase
+        .from('supermarkets')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+
       if (products) setFeaturedProducts(products as Product[]);
       if (markets) setSupermarkets(markets as Supermarket[]);
+
+      // Group deals by product
+      if (deals) {
+        const grouped = new Map<string, DealProduct>();
+        for (const row of deals as any[]) {
+          const pid = row.products.id;
+          if (!grouped.has(pid)) {
+            grouped.set(pid, {
+              id: row.products.id,
+              name: row.products.name,
+              slug: row.products.slug,
+              image_url: row.products.image_url,
+              product_prices: [],
+            });
+          }
+          grouped.get(pid)!.product_prices.push({
+            price: row.price,
+            original_price: row.original_price,
+            supermarkets: row.supermarkets,
+          });
+        }
+        setDealProducts(Array.from(grouped.values()).slice(0, 4));
+      }
+
+      // Update stats
+      setDynamicStats([
+        { label: 'Productos', value: productCount ? `${productCount.toLocaleString()}+` : '10,000+' },
+        { label: 'Supermercados', value: marketCount ? `${marketCount}+` : '6+' },
+        { label: 'Usuarios', value: '5,000+' },
+        { label: 'Ahorro Promedio', value: '15%' },
+      ]);
     };
 
     fetchData();
@@ -148,7 +217,7 @@ export function Home() {
             transition={{ delay: 0.4 }}
             className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto"
           >
-            {stats.map((stat) => (
+            {dynamicStats.map((stat) => (
               <div key={stat.label} className="glass rounded-2xl p-6 text-center">
                 <div className="text-2xl md:text-3xl font-bold text-gradient mb-1">{stat.value}</div>
                 <div className="text-sm text-text-muted">{stat.label}</div>
@@ -257,6 +326,94 @@ export function Home() {
                   </Link>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Daily Deals */}
+      {dealProducts.length > 0 && (
+        <section className="py-20 bg-surface-dark/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3">
+                  <Tag size={28} className="text-danger" />
+                  Ofertas del Día
+                </h2>
+                <p className="text-text-muted">Productos con descuento ahora</p>
+              </div>
+              <Link
+                to="/deals"
+                className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors font-medium"
+              >
+                Ver todas <ArrowRight size={18} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {dealProducts.map((product, index) => {
+                const bestPrice = product.product_prices[0]?.price || 0;
+                const originalPrice = product.product_prices[0]?.original_price;
+                const discount = originalPrice
+                  ? Math.round(((originalPrice - bestPrice) / originalPrice) * 100)
+                  : 0;
+
+                return (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <Link
+                      to={`/product/${product.slug}`}
+                      className="card block overflow-hidden group"
+                    >
+                      <div className="relative">
+                        <div className="aspect-square bg-surface-light flex items-center justify-center p-4">
+                          {product.image_url ? (
+                            <img
+                              src={product.image_url}
+                              alt={product.name}
+                              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="w-20 h-20 rounded-full bg-surface flex items-center justify-center">
+                              <Tag size={32} className="text-text-muted" />
+                            </div>
+                          )}
+                        </div>
+                        {discount > 0 && (
+                          <div className="absolute top-3 right-3 bg-danger text-white px-3 py-1 rounded-full text-sm font-bold">
+                            -{discount}%
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-bold text-danger">
+                            {formatCurrency(bestPrice)}
+                          </span>
+                          {originalPrice && (
+                            <span className="text-sm text-text-muted line-through">
+                              {formatCurrency(originalPrice)}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-text-muted mt-1">
+                          {product.product_prices[0]?.supermarkets?.name}
+                          {product.product_prices.length > 1 && (
+                            <span className="text-primary ml-1">· {product.product_prices.length} tiendas</span>
+                          )}
+                        </p>
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
