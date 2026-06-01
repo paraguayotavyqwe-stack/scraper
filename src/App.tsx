@@ -14,6 +14,7 @@ import { Auth } from './pages/Auth';
 import { Deals } from './pages/Deals';
 import { Favorites } from './pages/Favorites';
 import { AdminMappings } from './pages/AdminMappings';
+import { Admin } from './pages/Admin';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +54,7 @@ function App() {
             <Route path="deals" element={<Deals />} />
             <Route path="favorites" element={<Favorites />} />
             <Route path="admin/mappings" element={<AdminMappings />} />
+            <Route path="admin" element={<Admin />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
